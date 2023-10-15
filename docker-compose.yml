@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo
+    container_name: my_mongo
+    volumes:
+      - db_data:/data/db
+    networks:
+      - app-network
+
+  app:
+    build: ./app
+    container_name: my_python_app
+    volumes:
+      - ./app:/usr/src/app
+    working_dir: /usr/src/app
+    command: /bin/sh -c "while true; do sleep 3600; done"
+    networks:
+      - app-network
+    depends_on:
+      - mongo
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
